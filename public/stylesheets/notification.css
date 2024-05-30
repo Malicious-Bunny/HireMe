@@ -1,0 +1,151 @@
+:root {
+    --primary-color: rgb(50,41,47); 
+    --secondary-color: rgb(215,219,222); 
+    --accent-color: rgb(248,78,69); 
+    --text-color: white;
+    --background-color: rgb(112,93,86); 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+}
+
+.header__logo-img {
+    height: 4rem;
+}
+
+.header__profile {
+    display: flex;
+    align-items: center;
+}
+
+.header__profile-img {
+    height: 4rem;
+    width: 4rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.header__profile-name {
+    font-size: 1.6rem;
+}
+
+.notification-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.6rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+.notification-title {
+    font-size: 2.4rem;
+    margin-bottom: 2rem;
+}
+
+.notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-color);
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.notification__icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+
+.notification__content {
+    flex-grow: 1;
+}
+
+.notification__profile-img {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.notification__name {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.notification__role {
+    font-size: 1.4rem;
+    color: var(--secondary-color);
+    margin-right: 0.5rem;
+}
+
+.chat-notification {
+    cursor: pointer;
+}
+
+.chat-notification:hover {
+    background-color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+    .notification-container {
+        padding: 1rem;
+    }
+
+    .notification {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .notification__content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .notification__profile-img {
+        margin-bottom: 0.5rem;
+    }
+}

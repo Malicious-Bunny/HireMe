@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./stylesheets/chat.css">
+    <title>Chat | HIREME</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header__logo">
+            <img src="./images/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
+        </div>
+        <div class="header__profile">
+            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="header__profile-img">
+            <span class="header__profile-name">Amanda King</span>
+        </div>
+    </div>
+    <div class="chat-container">
+        <button class="back-btn" onclick="goBack()">← Back to Profile</button>
+        <div class="chat-box">
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="message-input" placeholder="Type your message..." />
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="./javascripts/chat.js"></script>
+</body>
+</html>
