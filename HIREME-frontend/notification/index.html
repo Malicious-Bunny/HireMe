@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Notification Center | HIREME</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header__logo">
+            <img src="../home page/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
+        </div>
+        <div class="header__profile">
+            <img src="../home page/resources/images/brianne.jpg" alt="Profile Picture" class="header__profile-img">
+            <span class="header__profile-name">Amanda King</span>
+        </div>
+    </div>
+    <div class="notification-container">
+        <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+        <h1 class="notification-title">Notification Center</h1>
+        <div class="notifications" id="notifications">
+            <!-- Example Notification -->
+            <div class="notification">
+                <div class="notification__icon">💼</div>
+                <div class="notification__content">
+                    <p>New job offer from XYZ Company</p>
+                </div>
+            </div>
+            <div class="notification chat-notification">
+                <div class="notification__icon">💬</div>
+                <div class="notification__content">
+                    <img src="../home page/resources/images/brianne.jpg" alt="Profile Picture" class="notification__profile-img">
+                    <div>
+                        <span class="notification__name">John Doe</span>
+                        <span class="notification__role">Recruiter</span>
+                        <p>Sent you a chat invitation</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Additional notifications will be dynamically added here -->
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+</html>

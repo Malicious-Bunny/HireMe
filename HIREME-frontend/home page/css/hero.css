@@ -1,0 +1,114 @@
+:root {
+    --primary-color: rgb(50,41,47); 
+    --secondary-color: rgb(215,219,222); 
+    --accent-color: rgb(248,78,69); 
+    --text-color: white;
+    --background-color: rgb(112,93,86); 
+}  
+
+
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    text-align: left;
+    height: 85vh;
+    padding: 2.0rem;
+    background-color: #fff;
+    background-image:linear-gradient(
+        to right bottom, 
+        rgba(50, 41, 47, 0.69),
+        rgba(112, 93, 86, 0.585) ) , 
+        url('../resources/images/pexels-olly-927022.jpg');
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+}
+
+.hero__content {
+    margin-bottom: 2.0rem;
+}
+
+.hero__title {
+    font-size: 10rem;
+    color:var(--accent-color);
+    margin-bottom: 1.0rem;
+    line-height: 9rem;
+}
+
+.hero__subtitle {
+    font-size: 2rem;
+    color: var(--text-color);
+    margin-bottom: 2.0rem;
+}
+
+.hero__button {
+    padding: 1.0rem 2.0rem;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-top: 2rem;
+    background-color: var(--accent-color);
+    border: none;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: all 0.4s
+    
+}
+
+.hero__button:hover {
+    background-color: var(--background-color);
+}
+
+
+.hero__trusted-by {
+    margin-top: 4.0rem;
+}
+
+.hero__trusted-text {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 1.0rem;
+}
+
+.hero__logos {
+    display: flex;
+    gap: 5.0rem;
+    justify-content: center;
+}
+
+.hero__logo {
+    height: 3.0rem;
+    width: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 76.8rem) {
+    .hero__title {
+        font-size: 4rem;
+        line-height: 3.6rem;
+    }
+    
+    .hero__subtitle {
+        font-size: 1.5rem;
+    }
+    
+    .hero__button {
+        font-size: 1.5rem;
+        padding: .8rem 1.6rem;
+    }
+    
+    .hero__image {
+        max-width: 100%;
+    }
+    
+    .hero__logos {
+        flex-direction: row;
+        gap: 2rem;
+    }
+    
+    .hero__logo {
+        height: 2rem;
+    }
+}
