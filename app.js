@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -21,8 +20,11 @@ const User = require('./models/User');  // Ensure this path is correct
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// Middleware to parse JSON data
+app.use(express.json());
+
+// Middleware to parse URL-encoded data
+app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
     secret: 'secret-key',
@@ -53,14 +55,16 @@ app.post('/signup', async (req, res) => {
         req.session.userId = newUser._id;
 
         if (role === 'recruiter') {
-            res.sendFile(path.join(__dirname, 'public', 'recruiter-dashboard.html'));
+            res.status(200).json({ redirectUrl: '/recruiter-dashboard' });
         } else {
-            res.sendFile(path.join(__dirname, 'public', 'employee-dashboard.html'));
+            res.status(200).json({ redirectUrl: '/employee-dashboard' });
         }
     } catch (error) {
         console.error('Error signing up user:', error);
         res.status(500).json({ message: 'Error signing up user', error });
     }
+
+    console.log('Signup request received', req.body);
 });
 
 app.post('/signin', async (req, res) => {
@@ -75,14 +79,16 @@ app.post('/signin', async (req, res) => {
         req.session.userId = user._id;
 
         if (user.role === 'recruiter') {
-            res.sendFile(path.join(__dirname, 'public', 'recruiter-dashboard.html'));
+            res.status(200).json({ redirectUrl: '/recruiter-dashboard' });
         } else {
-            res.sendFile(path.join(__dirname, 'public', 'employee-dashboard.html'));
+            res.status(200).json({ redirectUrl: '/employee-dashboard' });
         }
     } catch (error) {
         console.error('Error logging in user:', error);
         res.status(500).json({ message: 'Error logging in user', error });
     }
+
+    console.log('Signin request received', req.body);
 });
 
 // Protect routes (example usage)
@@ -90,16 +96,16 @@ app.get('/recruiter-dashboard', ensureAuthenticated, checkRole('recruiter'), (re
     res.sendFile(path.join(__dirname, 'public', 'recruiter-dashboard.html'));
 });
 
-app.get('/talent-dashboard', ensureAuthenticated, checkRole('talent'), (req, res) => {
+app.get('/employee-dashboard', ensureAuthenticated, checkRole('talent'), (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'employee-dashboard.html'));
 });
 
-app.get('/Login', ensureAuthenticated, checkRole('talent'), (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'Login.html'));
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.get('/home', ensureAuthenticated, checkRole('talent'), (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
@@ -107,3 +113,5 @@ const port = 3000;
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+ 
