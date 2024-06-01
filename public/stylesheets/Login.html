@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!-- created by Coder Vicky || www.codervicky.com  -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in/up Form</title>
+    <link rel="stylesheet" href="./stylesheets/login.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <form action="/signup" method="POST">
+        <h1>Create Account</h1>
+        <span>or use your email for registration</span>
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <select name="role" required>
+            <option value="recruiter">Recruiter</option>
+            <option value="talent">Talent</option>
+        </select>
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+<div class="form-container sign-in-container">
+    <form action="/signin" method="POST">
+        <h1>Sign in</h1>
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        
+        <a href="#">Forgot your password?</a>
+        <button type="submit">Sign In</button>
+    </form>
+</div>
+
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        <button class="ghost" id="signIn">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start journey with us</p>
+        <button class="ghost" id="signUp">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const signUpButton = document.getElementById('signUp');
+  const signInButton = document.getElementById('signIn');
+  const container = document.getElementById('container');
+
+  signUpButton.addEventListener('click', () => {
+    container.classList.add("right-panel-active");
+  });
+
+  signInButton.addEventListener('click', () => {
+    container.classList.remove("right-panel-active");
+  });
+
+  document.querySelector('form[action="/signup"]').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        alert(result.message); // Display error message
+      } else {
+        window.location.href = result.redirectUrl; // Redirect on success
+      }
+    } catch (error) {
+      alert('An error occurred. Please try again.');
+    }
+  });
+
+  document.querySelector('form[action="/signin"]').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        alert(result.message); // Display error message
+      } else {
+        window.location.href = result.redirectUrl; // Redirect on success
+      }
+    } catch (error) {
+      alert('An error occurred. Please try again.');
+    }
+  });
+</script>
+
+
+
+
+</body>
+</html>

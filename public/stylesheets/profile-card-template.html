@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/browseProfile.css">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/{%USERID%}" style="text-decoration: none; color: white;">
+    <div class="profile-card">
+        <img src="{%PICTURE%}" alt="Profile Picture" class="profile-card__img">
+        <div class="profile-card__info">
+            <h3 class="profile-card__name">{%NAME%}</h3>
+            <p class="profile-card__details">Skills: {%SKILLS%}</p>
+            <p class="profile-card__details">Experience: {%EXPERIENCE%} years</p>
+            <p class="profile-card__details">Location: {%LOCATION%}</p>
+        </div>
+    </div></a>
+    <script src="/javascripts/browseProfile.js"></script>
+</body>
+</html>
