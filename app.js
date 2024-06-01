@@ -25,23 +25,26 @@ mongoose.connect('mongodb+srv://bigouawe:Bigouawe07@niguel0.7va3loc.mongodb.net/
 const User = require('./models/User');  // Ensure this path is correct
 const Profile = require('./models/profile.js');  // Ensure this path is correct
 
-// Middleware to parse JSON data and URL-encoded data
+// Middleware to parse JSON data
 app.use(express.json());
+
+// Middleware to parse URL-encoded data
 app.use(express.urlencoded({ extended: true }));
 
 const { Types: { ObjectId } } = require('mongoose');
 
-// Helper function to validate ObjectId
-function validateObjectId(req, res, next) {
-    const userId = req.params.userId;
-    if (ObjectId.isValid(userId) && (new ObjectId(userId)).toString() === userId) {
-        return next();
-    } else {
-        res.status(400).send('Invalid ObjectId');
-    }
+function isValidObjectId(id) {
+    return ObjectId.isValid(id) && (new ObjectId(id)).toString() === id;
 }
 
-// Session middleware
+function validateObjectId(req, res, next) {
+    const userId = req.params.userId;
+    if (!isValidObjectId(userId)) {
+        return res.status(400).json({ message: 'Invalid user ID format' });
+    }
+    next();
+}
+
 app.use(session({
     secret: 'secret-key',
     resave: false,
@@ -91,7 +94,7 @@ function ensureAuthenticated(req, res, next) {
 
 // Middleware to check user role
 function checkRole(role) {
-    return function (req, res, next) {
+    return function(req, res, next) {
         if (req.user && req.user.role === role) {
             return next();
         } else {
@@ -174,7 +177,7 @@ app.post('/signin', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email }).select('+password');
-        if (!user || !(await bcrypt.compare(password, user.password))) {
+        if (!user || !(await user.correctPassword(password, user.password))) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
         req.session.userId = user._id;
@@ -208,7 +211,7 @@ app.post('/delete-profile', ensureAuthenticated, async (req, res) => {
         const { password } = req.body;
         const userId = req.session.userId;
         const user = await User.findById(userId).select('+password');
-        if (!user || !(await bcrypt.compare(password, user.password))) {
+        if (!user || !(await user.correctPassword(password, user.password))) {
             return res.status(401).json({ message: 'Invalid password' });
         }
         await User.findByIdAndDelete(userId);
@@ -225,7 +228,7 @@ app.post('/delete-profile', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Routes with ObjectId validation middleware
+// Apply validateObjectId middleware only to routes that need it
 app.get('/:userId', validateObjectId, ensureAuthenticated, async (req, res) => {
     try {
         const userId = req.params.userId;
