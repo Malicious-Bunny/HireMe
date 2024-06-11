@@ -1,0 +1,172 @@
+:root {
+    --primary-color: rgb(50,41,47); 
+    --secondary-color: rgb(215,219,222); 
+    --accent-color: rgb(248,78,69); 
+    --text-color: white;
+    --background-color: rgb(112,93,86); 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--primary-color);
+}
+
+.header__logo-img {
+    height: 4rem;
+}
+
+.header__profile {
+    display: flex;
+    align-items: center;
+}
+
+.header__profile-img {
+    height: 4rem;
+    width: 4rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.header__profile-name {
+    font-size: 1.6rem;
+}
+
+.profile-details {
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.6rem;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+.profile-details__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-details__img {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    margin-right: 2rem;
+}
+
+.profile-details__info {
+    flex-grow: 1;
+}
+
+.profile-details__name {
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.profile-details__bio {
+    font-size: 1.6rem;
+    color: var(--secondary-color);
+}
+
+.profile-details__body h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.profile-details__skills,
+.profile-details__projects,
+.profile-details__social {
+    list-style-type: none;
+}
+
+.profile-details__skills li,
+.profile-details__projects li,
+.profile-details__social li {
+    background-color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.profile-details__skills li:hover,
+.profile-details__projects li:hover,
+.profile-details__social li:hover {
+    background-color: var(--accent-color);
+}
+
+.profile-details__projects a,
+.profile-details__social a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.profile-details__projects a:hover,
+.profile-details__social a:hover {
+    text-decoration: underline;
+}
+
+.chat-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    cursor: pointer;
+    margin-top: 2rem;
+}
+
+.chat-btn:hover {
+    background-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .profile-details__header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-details__img {
+        margin-bottom: 1rem;
+    }
+
+    .profile-details__info {
+        text-align: center;
+    }
+}

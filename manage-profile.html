@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="./stylesheets/manage-profile.css">
+   
+    <style>
+        .popup-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            display: none;
+        }
+        .popup-message--success {
+            background-color: green;
+        }
+        .popup-message--error {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="./images/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo">
+        <div class="header__profile">
+            <span class="header__name">{%NAME%}</span>
+            <img src="{%PICTURE%}" alt="Profile Picture" class="header__picture">
+        </div>
+    </header>
+    <main class="main">
+        <form class="form" id="userForm" enctype="multipart/form-data" method="post" action="/save-profile">
+            <section class="form__section form__section--personal">
+                <h2 class="form__title"><i class="fas fa-user"></i> Personal Info</h2>
+                <div class="form__row">
+                    <label for="name" class="form__label"><i class="fas fa-id-badge"></i> Name</label>
+                    <input type="text" id="name" name="name" class="form__input" required>
+                </div>
+                <div class="form__row">
+                    <label for="dob" class="form__label"><i class="fas fa-calendar-alt"></i> Date of Birth</label>
+                    <input type="date" id="dob" name="dob" class="form__input" required>
+                </div>
+                <div class="form__row">
+                    <label for="pob" class="form__label"><i class="fas fa-map-marker-alt"></i> Place of Birth</label>
+                    <input type="text" id="pob" name="pob" class="form__input" required>
+                </div>
+                <div class="form__row">
+                    <label for="gender" class="form__label"><i class="fas fa-venus-mars"></i> Gender</label>
+                    <select id="gender" name="gender" class="form__input" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form__row">
+                    <label for="location" class="form__label"><i class="fas fa-map"></i> Location</label>
+                    <input type="text" id="location" name="location" class="form__input" required>
+                </div>
+                <div class="form__row">
+                    <label for="experience" class="form__label"><i class="fas fa-briefcase"></i> Years of Experience</label>
+                    <select id="experience" name="experience" class="form__input" required>
+                        <option value="0-2">0-2 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="6+">6+ years</option>
+                    </select>
+                </div>
+                <div class="form__row">
+                    <label for="picture" class="form__label"><i class="fas fa-camera"></i> Profile Picture</label>
+                    <input type="file" id="picture" name="picture" class="form__input" accept="image/*">
+                </div>
+            </section>
+            <section class="form__section form__section--skills">
+                <h2 class="form__title"><i class="fas fa-wrench"></i> Skills</h2>
+                <div class="form__row">
+                    <label for="skills" class="form__label"><i class="fas fa-code"></i> Skills</label>
+                    <div id="skills" class="form__input-container">
+                        <input type="text" id="new-skill" class="form__input" placeholder="Enter a skill">
+                        <button type="button" id="add-skill" class="form__button"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div id="skills-list" class="form__skills-list"></div>
+            </section>
+            <section class="form__section form__section--social">
+                <h2 class="form__title"><i class="fas fa-share-alt"></i> Social Links</h2>
+                <div class="form__row">
+                    <label for="social-link" class="form__label"><i class="fas fa-link"></i> Social Links</label>
+                    <div id="social-links" class="form__input-container">
+                        <input type="url" id="new-social-link" class="form__input" placeholder="Enter a social link">
+                        <button type="button" id="add-social-link" class="form__button"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div id="social-links-list" class="form__social-links-list"></div>
+            </section>
+            <div class="form__buttons">
+                <button type="button" class="form__button form__button--save">Save</button>
+                <button type="button" class="form__button form__button--delete">Delete</button>
+            </div>
+        </form>
+    </main>
+    <div class="popup" id="delete-popup">
+        <div class="popup__content">
+            <h3 class="popup__title">Confirm Deletion</h3>
+            <p class="popup__text">Enter your password to confirm deletion:</p>
+            <input type="password" class="popup__input" placeholder="Enter your password">
+            <div class="popup__buttons">
+                <button type="button" class="popup__button popup__button--confirm">Confirm</button>
+                <button type="button" class="popup__button popup__button--cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="popup-message popup-message--success" id="popup-success">Profile saved successfully</div>
+    <div class="popup-message popup-message--error" id="popup-error">Error occurred</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add skill event listener
+            document.getElementById('add-skill').addEventListener('click', function() {
+                const skillInput = document.getElementById('new-skill');
+                const skill = skillInput.value.trim();
+                if (skill) {
+                    const skillItem = document.createElement('div');
+                    skillItem.className = 'form__selected-skill';
+                    skillItem.textContent = skill;
+
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-skill';
+                    removeButton.innerHTML = '<i class="fas fa-times"></i>';
+                    removeButton.addEventListener('click', function() {
+                        skillItem.remove();
+                    });
+
+                    skillItem.appendChild(removeButton);
+                    document.getElementById('skills-list').appendChild(skillItem);
+                    skillInput.value = '';
+                }
+            });
+
+            // Add social link event listener
+            document.getElementById('add-social-link').addEventListener('click', function() {
+                const linkInput = document.getElementById('new-social-link');
+                const link = linkInput.value.trim();
+                if (link) {
+                    const linkItem = document.createElement('div');
+                    linkItem.className = 'form__social-link';
+                    linkItem.textContent = link;
+
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-link';
+                    removeButton.innerHTML = '<i class="fas fa-times"></i>';
+                    removeButton.addEventListener('click', function() {
+                        linkItem.remove();
+                    });
+
+                    linkItem.appendChild(removeButton);
+                    document.getElementById('social-links-list').appendChild(linkItem);
+                    linkInput.value = '';
+                }
+            });
+
+            // Initialize Google Places Autocomplete
+            /*const locationInput = document.getElementById('location');
+            const autocomplete = new google.maps.places.Autocomplete(locationInput);*/
+
+            // Save button event listener
+            document.querySelector('.form__button--save').addEventListener('click', async function() {
+                const form = document.getElementById('userForm');
+                const formData = new FormData(form);
+
+                const skills = Array.from(document.querySelectorAll('.form__selected-skill')).map(skill => skill.textContent);
+                const socialLinks = Array.from(document.querySelectorAll('.form__social-link')).map(link => link.textContent);
+
+                formData.append('skills', JSON.stringify(skills));
+                formData.append('socialLinks', JSON.stringify(socialLinks));
+
+                try {
+                    const response = await fetch('/save-profile', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        showPopupMessage('popup-success', 'Profile saved successfully');
+                    } else {
+                        showPopupMessage('popup-error', result.error || 'Error saving profile');
+                    }
+                } catch (error) {
+                    showPopupMessage('popup-error', 'An unexpected error occurred');
+                }
+            });
+
+            // Delete button event listener
+            document.querySelector('.form__button--delete').addEventListener('click', function() {
+                document.getElementById('delete-popup').classList.add('popup--active');
+            });
+
+            // Confirm deletion event listener
+            document.querySelector('.popup__button--confirm').addEventListener('click', async function() {
+                const passwordInput = document.querySelector('.popup__input').value;
+
+                try {
+                    const response = await fetch('/delete-profile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ password: passwordInput })
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        showPopupMessage('popup-success', 'Profile deleted successfully');
+                        setTimeout(() => {
+                            window.location.href = '/logout';
+                        }, 3000);
+                    } else {
+                        showPopupMessage('popup-error', result.error || 'Error deleting profile');
+                    }
+                } catch (error) {
+                    showPopupMessage('popup-error', 'An unexpected error occurred');
+                }
+            });
+
+            // Cancel deletion event listener
+            document.querySelector('.popup__button--cancel').addEventListener('click', function() {
+                document.getElementById('delete-popup').classList.remove('popup--active');
+            });
+
+            function showPopupMessage(elementId, message) {
+                const popup = document.getElementById(elementId);
+                popup.textContent = message;
+                popup.style.display = 'block';
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, elementId === 'popup-success' ? 3000 : 5000);
+            }
+        });
+    </script>
+</body>
+</html>

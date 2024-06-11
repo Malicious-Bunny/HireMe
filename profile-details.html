@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/profile-details.css">
+    <title>Profile Details | HIREME</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header__logo">
+            <img src="/images/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
+        </div>
+        <div class="header__profile">
+            <img src="{%PICTURE%}" alt="Profile Picture" class="header__profile-img">
+            <span class="header__profile-name">{%NAME%}</span>
+        </div>
+    </div>
+    <div class="profile-details">
+        <button class="back-btn" onclick="goBack()">← Back to Profiles</button>
+        <div class="profile-details__header">
+            <img src="/images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-details__img">
+            <div class="profile-details__info">
+                <h1 class="profile-details__name">{%NAME%}</h1>
+                <p class="profile-details__bio">{%BIO%}.</p>
+            </div>
+        </div>
+        <div class="profile-details__body">
+            <h2>Skills</h2>
+            <ul class="profile-details__skills">
+                <li>{%SKILLS%}</li>
+            </ul>
+            <h2>EXPERIENCE</h2>
+            <p>{%EXPERIENCE%} years of experience in {%SKILLS%}.</p>
+            <h2>Projects</h2>
+            <ul class="profile-details__projects">
+                <li><a href="{%PROJECTLINK%}" target="_blank">Project link</a></li>
+            </ul>
+            <h2>Social Media</h2>
+            <ul class="profile-details__social" id="social-links">
+                <!-- Social links will be dynamically inserted here -->
+            </ul>
+        </div>
+        <button class="chat-btn">Initiate Chat</button>
+    </div>
+    <script>
+        // Example social links (should be replaced with actual data from the server)
+        const socialLinks = [
+            'https://www.linkedin.com/in/example',
+            'https://www.youtube.com/channel/example',
+            'https://twitter.com/example',
+            'https://github.com/example',
+            'https://facebook.com/example',
+            'https://instagram.com/example',
+            'https://www.pinterest.com/example',
+            'https://www.tiktok.com/@example',
+            'https://www.reddit.com/user/example',
+            'https://www.snapchat.com/add/example',
+            'https://www.tumblr.com/blog/example',
+            'https://www.flickr.com/people/example',
+            'https://medium.com/@example'
+        ];
+
+        function getSocialMediaName(url) {
+            const socialMediaNames = [
+                { name: 'LinkedIn', pattern: 'linkedin.com' },
+                { name: 'YouTube', pattern: 'youtube.com' },
+                { name: 'Twitter', pattern: 'twitter.com' },
+                { name: 'GitHub', pattern: 'github.com' },
+                { name: 'Facebook', pattern: 'facebook.com' },
+                { name: 'Instagram', pattern: 'instagram.com' },
+                { name: 'Pinterest', pattern: 'pinterest.com' },
+                { name: 'TikTok', pattern: 'tiktok.com' },
+                { name: 'Reddit', pattern: 'reddit.com' },
+                { name: 'Snapchat', pattern: 'snapchat.com' },
+                { name: 'Tumblr', pattern: 'tumblr.com' },
+                { name: 'Flickr', pattern: 'flickr.com' },
+                { name: 'Medium', pattern: 'medium.com' }
+            ];
+            for (const socialMedia of socialMediaNames) {
+                if (url.includes(socialMedia.pattern)) {
+                    return socialMedia.name;
+                }
+            }
+            return 'Social Link';
+        }
+
+        function generateSocialLinks(links) {
+            const socialLinksContainer = document.getElementById('social-links');
+            links.forEach(link => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = link;
+                a.target = '_blank';
+                a.textContent = getSocialMediaName(link);
+                li.appendChild(a);
+                socialLinksContainer.appendChild(li);
+            });
+        }
+
+        // Call the function to generate the social links
+        generateSocialLinks(socialLinks);
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
