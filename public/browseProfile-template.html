@@ -12,8 +12,8 @@
             <img src="./images/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
         </div>
         <div class="header__profile">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="header__profile-img">
-            <span class="header__profile-name">Amanda King</span>
+            <img src="{%PICTURE%}" alt="Profile Picture" class="header__profile-img">
+            <span class="header__profile-name">{%NAME%}</span>
         </div>
     </div>
     <div class="filters">
@@ -37,96 +37,8 @@
             <option value="remote">Remote</option>
         </select>
     </div>
-    <div class="profiles">
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="profile-card__img">
-            <div class="profile-card__info">
-                <h3 class="profile-card__name">Amanda King</h3>
-                <p class="profile-card__details">Skills: JavaScript, React</p>
-                <p class="profile-card__details">Experience: 5 years</p>
-                <p class="profile-card__details">Location: New York</p>
-            </div>
-        </div>
+    <div class="profiles" id="profiles-cards">
+       {%PROFILES-CARDS%}
         <!-- Repeat similar blocks for more profiles -->
     </div>
     <script src="./script.js"></script>

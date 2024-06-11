@@ -12,26 +12,30 @@
             <img src="./images/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
         </div>
         <div class="header__profile">
-            <img src="./images/resources/images/brianne.jpg" alt="Profile Picture" class="header__profile-img">
-            <span class="header__profile-name">Amanda King</span>
+            <img src="{%PICTURE%}" alt="Profile Picture" class="header__profile-img">
+            <span class="header__profile-name">{%NAME%}</span>
         </div>
     </div>
     <div class="grid">
+        
         <div class="grid__item">
             <div class="grid__item-icon">🔍</div>
-            <div class="grid__item-title">browse profiles</div>
+            <a href="/browse-profiles"> <div class="grid__item-title">browse profiles</div></a>
         </div>
+        
         <div class="grid__item">
             <div class="grid__item-icon">💬</div>
-            <div class="grid__item-title">notifications</div>
+            <a href="/notifications"> <div class="grid__item-title">notifications</div> </a>
         </div>
+   
         <div class="grid__item">
             <div class="grid__item-icon">💬</div>
-            <div class="grid__item-title">Chats</div>
+            <a href="/chats"> <div class="grid__item-title">Chats</div></a>
         </div>
+        
         <div class="grid__item">
             <div class="grid__item-icon">💼</div>
-            <div class="grid__item-title">hire</div>
+            <a href="/hire"> <div class="grid__item-title">hire</div></a>
         </div>
     </div>
 </body>

@@ -9,25 +9,25 @@
 <body>
     <div class="header">
         <div class="header__logo">
-            <img src="../home page/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
+            <img src="./images/resources/images/png/logo-no-background.png" alt="Logo" class="header__logo-img">
         </div>
         <div class="header__profile">
-            <img src="../resources/images/sarah.jpg" alt="Profile Picture" class="header__profile-img">
-            <span class="header__profile-name">Amanda King</span>
+            <img src="{%PICTURE%}" alt="Profile Picture" class="header__profile-img">
+            <span class="header__profile-name">{%NAME%}</span>
         </div>
     </div>
     <div class="grid">
         <div class="grid__item">
             <div class="grid__item-icon">👤</div>
-            <div class="grid__item-title">Manage Profile</div>
+            <a href="/manage-profiles"><div class="grid__item-title">manage profiles</div></a>
         </div>
         <div class="grid__item">
             <div class="grid__item-icon">🔔</div>
-            <div class="grid__item-title">Notifications</div>
+            <a href="/Notifications"><div class="grid__item-title">Notifications</div></a>
         </div>
         <div class="grid__item">
             <div class="grid__item-icon">💬</div>
-            <div class="grid__item-title">Chats</div>
+            <a href="/chats"><div class="grid__item-title">chats</div></a>
         </div>
     </div>
 </body>
