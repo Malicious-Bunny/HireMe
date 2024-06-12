@@ -1,0 +1,56 @@
+.about{
+    background-color:#705D56;
+    width: 100%;
+    padding: 78px 0px;
+}
+.telechargement{
+    height: auto;
+    width: 500px;
+}
+.about-text{
+    width: 550px;
+}
+.main{
+    width: 1130;
+    max-width: 95%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.about-text h1{
+    font-size: 80px;
+    margin-bottom: 20px;
+    color: white;
+}
+.about-text p{
+    color:  white; 
+    letter-spacing: 1px;
+    line-height: 28px;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 45px; 
+    font-weight: light;                       
+}
+button{
+    background-color: #8e5d4b;
+    color: white;
+    border: none;
+    height: 30px;
+    width: 40;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: 1s;
+}
+button:hover{
+    background-color: white;;
+    color:  #8e5d4b;
+    transition: 1s;
+}
+button:active{
+    background-color: #32292F;
+}
