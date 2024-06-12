@@ -1,0 +1,13 @@
+.error-title{
+    font-weight: bold;
+    font-size: 40px;
+    font-style: italic;
+    text-align: center;
+    margin-top: 80px;
+    margin-bottom: 0;
+   }
+   .error-type{
+    font-style: italic;
+    text-align: center;
+    margin-top: 0;        
+   }
