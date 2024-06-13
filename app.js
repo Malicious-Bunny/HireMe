@@ -7,10 +7,11 @@ const multer = require('multer');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const fs = require('fs').promises;
-const app = express();
 
 const Profile = require('./models/Profile');
 const User = require('./models/User');
+
+const app = express();
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({
@@ -22,7 +23,7 @@ const upload = multer({ storage: storage });
 // MongoDB Connection
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://bigouawe:Bigouawe07@niguel0.7va3loc.mongodb.net/', {
+    await mongoose.connect('mongodb+srv://bigouawe:Bigouawe07@niguel0.7va3loc.mongodb.net/Hireme', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -37,11 +38,12 @@ connectDB();
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(session({
   secret: 'D5BF2488EE739F9DCDF9447F7FBA9',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: 'mongodb+srv://bigouawe:Bigouawe07@niguel0.7va3loc.mongodb.net/' }),
+  store: MongoStore.create({ mongoUrl: 'mongodb+srv://bigouawe:Bigouawe07@niguel0.7va3loc.mongodb.net/Hireme' }),
 }));
 
 // Authentication Middleware
@@ -59,13 +61,14 @@ const injectUserData = async (req, res, next) => {
       const user = await User.findById(req.session.user.id);
       const profile = await Profile.findOne({ userId: req.session.user.id });
 
-      if (user && profile) {
+      if (user) {
         const filePath = path.join(__dirname, 'public', req.path);
         const fileExists = await fs.stat(filePath).catch(() => false);
 
         if (fileExists && fileExists.isFile()) {
           const data = await fs.readFile(filePath, 'utf-8');
-          let content = data.replace('{%NAME%}', user.name).replace('{%PICTURE%}', profile.profilePicture);
+          let content = data.replace('{%NAME%}', user.name)
+                            .replace('{%PICTURE%}', profile ? profile.profilePicture : 'https://thypix.com/wp-content/uploads/2021/11/sponge-bob-profile-picture-thypix-104-408x465.jpg');
           return res.send(content);
         }
       }
@@ -91,6 +94,7 @@ app.post('/signup', upload.single('profile-picture'), async (req, res) => {
     req.session.user = { id: user._id, role: user.role };
     res.status(201).json({ message: 'User created successfully', redirectUrl: role === 'recruiter' ? '/recruiter-dashboard' : '/employee-dashboard' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error, please try again' });
   }
 });
@@ -106,6 +110,7 @@ app.post('/signin', async (req, res) => {
     req.session.user = { id: user._id, role: user.role };
     res.status(200).json({ message: 'Login successful', redirectUrl: user.role === 'recruiter' ? '/recruiter-dashboard' : '/employee-dashboard' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error, please try again' });
   }
 });
@@ -135,8 +140,8 @@ app.post('/save-profile', authenticate, upload.single('picture'), async (req, re
     profile.gender = gender;
     profile.location = location;
     profile.experience = experience;
-    profile.skills = JSON.parse(skills);
-    profile.socialLinks = JSON.parse(socialLinks);
+    profile.skills = typeof skills === 'string' ? JSON.parse(skills) : skills;
+    profile.socialLinks = typeof socialLinks === 'string' ? JSON.parse(socialLinks) : socialLinks;
     profile.profilePicture = profilePicture;
 
     await profile.save();
@@ -148,12 +153,17 @@ app.post('/save-profile', authenticate, upload.single('picture'), async (req, re
   }
 });
 
-
 const deleteAttempts = {};
 
 app.post('/delete-profile', authenticate, async (req, res) => {
   const userId = req.session.user.id;
   const { password } = req.body;
+
+  console.log('Delete request received:', req.body); // Log incoming request data
+
+  if (!password) {
+    return res.status(400).json({ success: false, message: 'Password is required' });
+  }
 
   if (!deleteAttempts[userId]) {
     deleteAttempts[userId] = { attempts: 0, cooldown: null };
@@ -182,22 +192,111 @@ app.post('/delete-profile', authenticate, async (req, res) => {
       res.status(200).json({ success: true, message: 'Profile deleted successfully', redirectUrl: '/login' });
     });
   } catch (error) {
+    console.error('Error deleting profile:', error);
     res.status(500).json({ success: false, message: 'Error deleting profile' });
   }
 });
 
-// Frontend Routes
+// Function to inject user data into templates
+const injectUserDataInTemplate = async (templatePath, user, profile) => {
+  let template = await fs.readFile(templatePath, 'utf-8');
+  template = template.replace('{%NAME%}', user.name)
+                     .replace('{%PICTURE%}', profile ? profile.profilePicture : 'https://thypix.com/wp-content/uploads/2021/11/sponge-bob-profile-picture-thypix-104-408x465.jpg');
+  return template;
+};
+
+// Routes to Serve HTML Templates with User Data
+const routesWithTemplates = [
+  { route: '/login', template: 'login.html' },
+  { route: '/recruiter-dashboard', template: 'recruiter-dashboard.html' },
+  { route: '/notifications', template: 'notification.html' },
+  { route: '/chats', template: 'chat-template.html' },
+  { route: '/hire', template: 'hire.html' },
+  { route: '/employee-dashboard', template: 'employee-dashboard.html' },
+  { route: '/manage-profiles', template: 'manage-profile.html' },
+  { route: '/delete-profile', template: 'delete-profile.html' },
+];
+
+routesWithTemplates.forEach(({ route, template }) => {
+  app.get(route, authenticate, injectUserData, async (req, res) => {
+    const templatePath = path.join(__dirname, 'public', template);
+    const user = await User.findById(req.session.user.id);
+    const userProfile = await Profile.findOne({ userId: req.session.user.id });
+
+    const content = await injectUserDataInTemplate(templatePath, user, userProfile);
+    res.send(content);
+  });
+});
+
+app.get('/browse-profiles', authenticate, injectUserData, async (req, res) => {
+  try {
+    const profiles = await Profile.find({});
+    const profileCards = profiles.map(profile => `
+      <a href="/profile-details/${profile.userId}">
+        <div class="profile-card">
+          <img src="${profile.profilePicture || 'https://thypix.com/wp-content/uploads/2021/11/sponge-bob-profile-picture-thypix-104-408x465.jpg'}" alt="${profile.name}" class="profile-card__image">
+          <div class="profile-card__info">
+            <h2 class="profile-card__name">${profile.name}</h2>
+            <p class="profile-card__details">Skills: ${profile.skills.join(', ')}</p>
+            <p class="profile-card__details">Experience: ${profile.experience} years</p>
+            <p class="profile-card__details">Location: ${profile.location}</p>
+          </div>
+        </div>
+      </a>
+    `).join('');
+
+    const templatePath = path.join(__dirname, 'public', 'browseProfile-template.html');
+    let template = await fs.readFile(templatePath, 'utf-8');
+    template = template.replace('{%PROFILES-CARDS%}', profileCards);
+
+    const user = await User.findById(req.session.user.id);
+    const userProfile = await Profile.findOne({ userId: req.session.user.id });
+
+    const userName = user ? user.name : 'Unknown User';
+    const userProfilePicture = userProfile ? userProfile.profilePicture : 'https://thypix.com/wp-content/uploads/2021/11/sponge-bob-profile-picture-thypix-104-408x465.jpg';
+
+    template = template.replace('{%NAME%}', userName).replace('{%PICTURE%}', userProfilePicture);
+
+    res.send(template);
+  } catch (error) {
+    console.error('Error fetching profiles:', error);
+    res.status(500).json({ message: 'Server error, please try again' });
+  }
+});
+
+app.get('/profile-details/:userId', authenticate, injectUserData, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ userId: req.params.userId });
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    const templatePath = path.join(__dirname, 'public', 'profile-details.html');
+    let template = await fs.readFile(templatePath, 'utf-8');
+
+    const user = await User.findById(req.session.user.id); // Ensure user is correctly fetched
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    template = template.replace('{%NAME%}', profile.name)
+                      .replace('{%NAMES%}', user.name)
+                      .replace(/{%PICTURE%}/g, profile.profilePicture || 'https://www.silviatormen.com/wp-content/uploads/2022/11/avatar-1577909_1280-1024x1024.webp')
+                      .replace('{%BIO%}', profile.bio || 'No bio available')
+                      .replace('{%SKILLS%}', profile.skills.join(', '))
+                      .replace('{%EXPERIENCE%}', profile.experience)
+                      .replace('{%PROJECTLINK%}', profile.projects && profile.projects.length > 0 ? profile.projects[0].link : '#');
+
+    res.send(template);
+  } catch (error) {
+    console.error('Error fetching profile details:', error);
+    res.status(500).json({ message: 'Server error, please try again' });
+  }
+});
+
+// Other Routes
+app.get('/', (req, res) => res.redirect('/login'));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
-app.get('/recruiter-dashboard', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'recruiter-dashboard.html')));
-app.get('/browse-profiles', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'browseProfile-template.html')));
-app.get('/notifications', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'notification.html')));
-app.get('/chats', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'chat-template.html')));
-app.get('/hire', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'hire.html')));
-app.get('/employee-dashboard', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'employee-dashboard.html')));
-app.get('/manage-profiles', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'manage-profile.html')));
-app.get('/notification', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'notification.html')));
-app.get('/job-request', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'job-request.html')));
-app.get('/chat', authenticate, injectUserData, (req, res) => res.sendFile(path.join(__dirname, 'public', 'chat-template.html')));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
